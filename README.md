@@ -12,9 +12,11 @@ novice programmers to achieve simple tasks.
 2. Run `npm run compile $INPUT_FILE $OUTPUT_FILE` to transpile to JavaScript.
 3. Run the `$OUTPUT_FILE` as usual using `node`.
 
-For example, the example test file `test.is`:
+For example, the example test file `example.is`:
 
-`$ npm run compile ./test.is output.js`
+`$ npm run compile ./example.is output.js`
+
+`$ node output.js`
 
 > Optionally, specify `--show-source` to see each output line's input included
 > as a comment.
