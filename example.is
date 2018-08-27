@@ -1,0 +1,20 @@
+value counter is 0
+value maximum is 100
+
+counter is 10
+
+task increment gets input
+  return input + 1
+end
+
+log 'Hello, world!'
+
+task main gets nothing
+  until counter equals maximum
+    run increment counter
+    log '{counter}'
+  end
+  log 'complete!'
+end
+
+run main
