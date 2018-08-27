@@ -1,0 +1,9 @@
+{
+  "name": "islang",
+  "version": "1.0.0",
+  "description": "Compile .is to .js",
+  "scripts": {
+    "compile": "node src/main.js"
+  },
+  "author": "Chris Lewis"
+}
