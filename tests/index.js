@@ -77,26 +77,6 @@ describe('compile', () => {
     });
   });
 
-  describe('functions', () => {
-    it('should transform a function invocation', () => {
-      const input = 'run increment';
-      const output = 'increment();';
-      transformTest(input, output);
-    });
-
-    it('should transform a function invocation with arguments', () => {
-      const input = 'run increment with counter';
-      const output = 'increment(counter);';
-      transformTest(input, output);
-    });
-
-    it('should throw if function arguments are specified incorrectly', () => {
-      const input = 'run increment counter';
-      const run = () => transformTest(input);
-      expect(run).to.throw();
-    });
-  });
-
   describe('tasks', () => {
     it('should transform a task declaration', () => {
       const input = 'task my_task';
@@ -125,6 +105,30 @@ describe('compile', () => {
     it('should transform a return statement', () => {
       const input = 'return some_value';
       const output = 'return some_value;';
+      transformTest(input, output);
+    });
+
+    it('should transform a function invocation', () => {
+      const input = 'run increment';
+      const output = 'increment();';
+      transformTest(input, output);
+    });
+
+    it('should transform a function invocation with arguments', () => {
+      const input = 'run increment with counter';
+      const output = 'increment(counter);';
+      transformTest(input, output);
+    });
+
+    it('should throw if function arguments are specified incorrectly', () => {
+      const input = 'run increment counter';
+      const run = () => transformTest(input);
+      expect(run).to.throw();
+    });
+
+    it('should transform assigning the result of a task invocation', () => {
+      const input = 'counter is run increment with counter';
+      const output = 'counter = increment(counter);';
       transformTest(input, output);
     });
   });

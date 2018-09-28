@@ -27,6 +27,16 @@ const transform = (input, tokens) => {
 
   // Variable assignment
   if (tokens[1] === 'is') {
+    // Store function return value
+    if (tokens.length > 3) {
+      if (tokens[2] !== 'run') {
+        throw new Error('Assign return value of a task using \'is run\'');
+      }
+
+      const functionArgs = tokens.slice(5);
+      return `${tokens[0]} = ${tokens[3]}(${functionArgs.join(',')});`
+    }
+    
     const varValue = tokens.slice(2).join(' ');
     return `${tokens[0]} = ${varValue};`;
   }
@@ -82,8 +92,6 @@ const transform = (input, tokens) => {
   if (tokens[0] === 'return') {
     return `return ${tokens.slice(1).join(' ')};`;
   }
-
-  // TODO: use result of functions
 };
 
 module.exports = transform;

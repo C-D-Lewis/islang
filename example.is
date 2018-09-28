@@ -1,7 +1,7 @@
 value counter is 0
-value maximum is 100
+value maximum is 10
 
-counter is 10
+counter is 2
 
 task increment gets input
   return input + 1
@@ -11,7 +11,7 @@ log 'Hello, world!'
 
 task main
   until counter equals maximum
-    run increment with counter
+    counter is run increment with counter
     log '{counter}'
   end
   log 'complete!'
