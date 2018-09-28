@@ -99,13 +99,19 @@ describe('compile', () => {
 
   describe('tasks', () => {
     it('should transform a task declaration', () => {
-      const input = 'task mytask gets somevalue';
-      const output = 'function mytask (somevalue) {';
+      const input = 'task my_task';
+      const output = 'function my_task () {';
       transformTest(input, output);
     });
 
-    it('should throw if a task does not specify a parameter list', () => {
-      const input = 'task mytask';
+    it('should transform a task declaration with arguments', () => {
+      const input = 'task my_task gets some_value';
+      const output = 'function my_task (some_value) {';
+      transformTest(input, output);
+    });
+
+    it('should throw if a task incorrectly specifies a parameter list', () => {
+      const input = 'task my_task some_value';
       const run = () => transformTest(input);
       expect(run).to.throw();
     });
@@ -117,8 +123,8 @@ describe('compile', () => {
     });
 
     it('should transform a return statement', () => {
-      const input = 'return somevalue';
-      const output = 'return somevalue;';
+      const input = 'return some_value';
+      const output = 'return some_value;';
       transformTest(input, output);
     });
   });

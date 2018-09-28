@@ -64,13 +64,12 @@ const transform = (input, tokens) => {
   }
 
   // Function declaration start
-  // TODO: Make gets optional for simple functions
   if (tokens[0] === 'task') {
-    if (!tokens.includes('gets')) {
-      throw new Error('task statement should include arguments after task name using \'gets\'');
+    if (tokens.length > 2 && !tokens.includes('gets')) {
+      throw new Error('task statement should specify arguments after task name using \'gets\'');
     }
 
-    const functionArgs = tokens.slice(3).filter(item => item !== 'nothing');
+    const functionArgs = tokens.slice(3);
     return `function ${tokens[1]} (${functionArgs.join(',')}) {`;
   }
 

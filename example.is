@@ -9,7 +9,7 @@ end
 
 log 'Hello, world!'
 
-task main gets nothing
+task main
   until counter equals maximum
     run increment with counter
     log '{counter}'
