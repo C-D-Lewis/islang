@@ -42,14 +42,14 @@ const createJsFile = (lines) => {
 const main = () => {
   try {
     const args = process.argv.slice(2);
-    if (args.length < 2) {
-      throw new Error('Two args required - input path and output path');
+    if (args.length < 1) {
+      throw new Error('Input path argument required.');
     }
 
-    const [inputPath, outputPath] = args;
+    const [inputPath] = args;
     const lines = fs.readFileSync(`${__dirname}/../${inputPath}`, 'utf8').split('\n');
     const outputLines = createJsFile(lines);
-    fs.writeFileSync(`${__dirname}/../${outputPath}`, outputLines, 'utf8');
+    fs.writeFileSync(`${__dirname}/../build.js`, outputLines, 'utf8');
   } catch (e) {
     console.log(e.message);
   }
