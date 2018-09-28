@@ -19,7 +19,7 @@ const getIndentLevel = (line) => {
 };
 
 const processLines = (lines) => {
-  let output = '// compiled with is-compile.js\n\n';
+  let output = '// compiled from islang source\n\n';
   lines.forEach((line) => {
     const indentLevel = getIndentLevel(line);
     const input = line.trim();
@@ -72,7 +72,7 @@ const processLines = (lines) => {
 
     // Invoke function
     if (input.startsWith('run ')) {
-      const functionArgs = tokens.slice(2);
+      const functionArgs = tokens.slice(3);
       output += `${tokens[1]}(${functionArgs.join(',')});\n`;
       return;
     }

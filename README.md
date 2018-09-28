@@ -79,12 +79,12 @@ task increment gets input_value
 end
 ```
 
-Functions are called using the `run` keyword.
+Functions are called using the `run` keyword, specifying arguments after `with`.
 
 ```
 value counter = 1
 
-run increment counter
+run increment with counter
 ```
 
 
@@ -99,7 +99,7 @@ value counter is 0
 value maximum is 100
 
 until counter equals maximum
-  run increment counter
+  run increment with counter
   log '{counter}'
 end
 ``` 

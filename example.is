@@ -11,7 +11,7 @@ log 'Hello, world!'
 
 task main gets nothing
   until counter equals maximum
-    run increment counter
+    run increment with counter
     log '{counter}'
   end
   log 'complete!'
