@@ -92,6 +92,14 @@ value counter = 1
 run increment with counter
 ```
 
+You can use the return value of a function by combining `is` with `run`:
+
+```
+value counter = 0
+
+counter is run increment with counter
+```
+
 
 ### Loops
 
