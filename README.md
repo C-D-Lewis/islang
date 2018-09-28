@@ -22,6 +22,11 @@ For example, the example test file `example.is`:
 > as a comment.
 
 
+## Run Tests
+
+`$ npm test`
+
+
 ## Language Basics
 
 The `is` language follows a similar structure to most other statement-based

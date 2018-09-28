@@ -63,7 +63,7 @@ describe('compile', () => {
     });
   });
 
-  describe('lopos', () => {
+  describe('loops', () => {
     it('should transform an until loop', () => {
       const input = 'until counter equals maximum';
       const output = 'while (counter !== maximum) {';
