@@ -1,23 +1,3 @@
-const fs = require('fs');
-
-const OPTIONS = {
-  showSource: process.argv.includes('--show-source'),
-};
-
-const getIndentLevel = (line) => {
-  const chars = line.split('');
-  let numSpaces = 0;
-  while (chars[numSpaces] === ' ') {
-    numSpaces += 1;
-  }
-
-  if (numSpaces % 2 !== 0) {
-    throw new Error(`Odd indentation (must be multiple of two spaces):\n '${line}'`);
-  }
-
-  return numSpaces / 2;
-};
-
 /**
  * Transform a line of is into a line of JS
  * @param {String} input - The entire input line.
@@ -57,11 +37,15 @@ const transform = (input, tokens) => {
       throw new Error('until statement must specify limit with \'equals\'');
     }
 
-    return `while(${tokens[1]} !== ${tokens[3]}) {`;
+    return `while (${tokens[1]} !== ${tokens[3]}) {`;
   }
 
   // Invoke function
   if (tokens[0] === 'run') {
+    if (tokens.length > 3 && tokens[2] !== 'with') {
+      throw new Error('Task arguments should be specified with \'with\'');
+    }
+
     const functionArgs = tokens.slice(3);
     return `${tokens[1]}(${functionArgs.join(',')});`;
   }
@@ -70,7 +54,7 @@ const transform = (input, tokens) => {
   if (tokens[0] === 'log') {
     // Literal or value?
     if (!input.includes('\'')) {
-      throw new Error('log must always be passed a string, which can include template values with { and }');
+      throw new Error('log must always be passed a string in single quotes, which can include template values with { and }');
     }
 
     const strStart = input.indexOf('\'') + 1;
@@ -87,7 +71,7 @@ const transform = (input, tokens) => {
     }
 
     const functionArgs = tokens.slice(3).filter(item => item !== 'nothing');
-    return `function ${tokens[1]}(${functionArgs.join(',')}) {`;
+    return `function ${tokens[1]} (${functionArgs.join(',')}) {`;
   }
 
   // Function declaration end
@@ -99,42 +83,8 @@ const transform = (input, tokens) => {
   if (tokens[0] === 'return') {
     return `return ${tokens.slice(1).join(' ')};`;
   }
+
+  // TODO: use result of functions
 };
 
-const processLines = (lines) => {
-  let output = '// compiled from islang source\n\n';
-  lines.forEach((line) => {
-    const indentLevel = getIndentLevel(line);
-    const input = line.trim();
-
-    // Optionally annotate with source line
-    output += ' '.repeat(indentLevel * 2);
-    if (OPTIONS.showSource) {
-      output += `// ${input}\n` + ' '.repeat(indentLevel * 2);
-    }
-    const tokens = input.split(' ');
-    
-    output += transform(input, tokens) + '\n';
-  });
-
-  return output;
-};
-
-const main = () => {
-  try {
-    const args = process.argv.slice(2);
-    if (args.length < 2) {
-      throw new Error('Two args required - input path and output path');
-    }
-
-    const [inputPath, outputPath] = args;
-    const lines = fs.readFileSync(`${__dirname}/../${inputPath}`, 'utf8').split('\n');
-    const outputLines = processLines(lines);
-    fs.writeFileSync(`${__dirname}/../${outputPath}`, outputLines, 'utf8');
-  } catch (e) {
-    console.log(e.message);
-  }
-};
-
-main();
-
+module.exports = transform;

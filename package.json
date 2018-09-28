@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "Compile .is to .js",
   "scripts": {
-    "compile": "node src/main.js"
+    "compile": "node src/index.js",
+    "test": "./node_modules/.bin/mocha tests/index.js"
   },
-  "author": "Chris Lewis"
+  "author": "Chris Lewis",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
 }
