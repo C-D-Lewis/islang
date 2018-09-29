@@ -38,8 +38,7 @@ describe('compile', () => {
 
     it('should throw if a log statement has no single quotes', () => {
       const input = 'log counter';
-      const run = () => transformTest(input);
-      expect(run).to.throw();
+      expect(() => transformTest(input)).to.throw();
     });
   });
 
@@ -52,8 +51,7 @@ describe('compile', () => {
 
     it('should throw if a variable declaration omits initialiser', () => {
       const input = 'value counter';
-      const run = () => transformTest(input);
-      expect(run).to.throw();
+      expect(() => transformTest(input)).to.throw();
     });
 
     it('should transform a variable assignment', () => {
@@ -72,8 +70,7 @@ describe('compile', () => {
 
     it('should throw if an until loop omits a limit', () => {
       const input = 'until counter';
-      const run = () => transformTest(input);
-      expect(run).to.throw();
+      expect(() => transformTest(input)).to.throw();
     });
   });
 
@@ -92,8 +89,7 @@ describe('compile', () => {
 
     it('should throw if a task incorrectly specifies a parameter list', () => {
       const input = 'task my_task some_value';
-      const run = () => transformTest(input);
-      expect(run).to.throw();
+      expect(() => transformTest(input)).to.throw();
     });
 
     it('should transform a task end', () => {
@@ -122,14 +118,28 @@ describe('compile', () => {
 
     it('should throw if function arguments are specified incorrectly', () => {
       const input = 'run increment counter';
-      const run = () => transformTest(input);
-      expect(run).to.throw();
+      expect(() => transformTest(input)).to.throw();
     });
 
     it('should transform assigning the result of a task invocation', () => {
       const input = 'counter is run increment with counter';
       const output = 'counter = increment(counter);';
       transformTest(input, output);
+    });
+
+    it('should throw if improper variable assignment from task result', () => {
+      const input = 'counter is increment with counter';
+      expect(() => transformTest(input)).to.throw();
+    });
+
+    it('should throw if task arguments are specified without \'with\'', () => {
+      const input = 'run increment counter';
+      expect(() => transformTest(input)).to.throw();
+    });
+
+    it('should throw for any other kind of input', () => {
+      const input = 'the meaning of life';
+      expect(() => transformTest(input)).to.throw();
     });
   });
 });

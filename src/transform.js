@@ -36,7 +36,7 @@ const transform = (input, tokens) => {
       const functionArgs = tokens.slice(5);
       return `${tokens[0]} = ${tokens[3]}(${functionArgs.join(',')});`
     }
-    
+
     const varValue = tokens.slice(2).join(' ');
     return `${tokens[0]} = ${varValue};`;
   }
@@ -52,7 +52,7 @@ const transform = (input, tokens) => {
 
   // Invoke function
   if (tokens[0] === 'run') {
-    if (tokens.length > 3 && tokens[2] !== 'with') {
+    if (tokens.length > 2 && tokens[2] !== 'with') {
       throw new Error('Task arguments should be specified with \'with\'');
     }
 
@@ -92,6 +92,8 @@ const transform = (input, tokens) => {
   if (tokens[0] === 'return') {
     return `return ${tokens.slice(1).join(' ')};`;
   }
+
+  throw new Error(`Invalid statement: ${input}`);
 };
 
 module.exports = transform;
