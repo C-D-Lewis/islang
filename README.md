@@ -192,7 +192,7 @@ See the `examples` directory for more example scripts.
 ## TODO List
 
 * Utilities (random numbers, read/write files, HTTP, etc.)
-* Evaluate function calls inline
+* Evaluate function calls inline (passes)
 * Remove requirement for quotes in strings (rest of line)
 * Replace string template with typeof check
-* Objects?
+* Imports

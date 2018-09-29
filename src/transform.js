@@ -5,6 +5,8 @@
  * @returns {String} The line of JS.
  */
 const transform = (input, tokens) => {
+  const [t0, t1, t2, t3, t4, t5, t6] = tokens;
+
   // Empty line
   if (!input.length) {
     return '';
@@ -16,69 +18,64 @@ const transform = (input, tokens) => {
   }
 
   // Variable declaration
-  if (tokens[0] === 'value') {
-    if (tokens[2] !== 'is') {
+  if (t0 === 'value') {
+    if (t2 !== 'is') {
       throw new Error('value statement should include \'is\' to initialise it with a value');
     }
 
     // Store function return value
     if (tokens.includes('run')) {
-      const functionArgs = tokens.slice(6);
-      return `let ${tokens[1]} = ${tokens[4]}(${functionArgs.join(', ')});`
+      return `let ${t1} = ${t4}(${tokens.slice(6).join(', ')});`
     }
 
     // Use simple expression
-    const expression = tokens.slice(3).join(' ');
-    return `let ${tokens[1]} = ${expression};`;
+    return `let ${t1} = ${tokens.slice(3).join(' ')};`;
   }
 
   // Variable assignment
-  if (tokens[1] === 'is') {
+  if (t1 === 'is') {
     // Store function return value
     if (tokens.length > 3) {
-      if (tokens[2] !== 'run') {
+      if (t2 !== 'run') {
         throw new Error('Assign return value of a task using \'is run\'');
       }
 
-      const functionArgs = tokens.slice(5);
-      return `${tokens[0]} = ${tokens[3]}(${functionArgs.join(', ')});`
+      return `${t0} = ${t3}(${tokens.slice(5).join(', ')});`
     }
 
     // Use simple expression (e.g: result + 1)
-    const expression = tokens.slice(2).join(' ');
-    return `${tokens[0]} = ${expression};`;
+    return `${t0} = ${tokens.slice(2).join(' ')};`;
   }
 
   // If statement
-  if (tokens[0] === 'when') {
+  if (t0 === 'when') {
     if (tokens.length < 4) {
       throw new Error('when statement must specify condition');
     }
 
-    return `if (${tokens[1]} ${tokens[2]} ${tokens[3]}) {`;
+    return `if (${t1} ${t2} ${t3}) {`;
   }
 
   // Until loop
-  if (tokens[0] === 'until') {
-    if (tokens[2] !== 'equals') {
+  if (t0 === 'until') {
+    if (t2 !== 'equals') {
       throw new Error('until statement must specify limit with \'equals\'');
     }
 
-    return `while (${tokens[1]} !== ${tokens[3]}) {`;
+    return `while (${t1} !== ${t3}) {`;
   }
 
   // Invoke function
-  if (tokens[0] === 'run') {
-    if (tokens.length > 2 && tokens[2] !== 'with') {
+  if (t0 === 'run') {
+    if (tokens.length > 2 && t2 !== 'with') {
       throw new Error('Task arguments should be specified with \'with\'');
     }
 
-    const functionArgs = tokens.slice(3);
-    return `${tokens[1]}(${functionArgs.join(', ')});`;
+    return `${t1}(${tokens.slice(3).join(', ')});`;
   }
 
   // Log statement
-  if (tokens[0] === 'log') {
+  if (t0 === 'log') {
     // Literal or value?
     if (!input.includes('\'')) {
       throw new Error('log must always be passed a string in single quotes, which can include template values with { and }');
@@ -86,50 +83,47 @@ const transform = (input, tokens) => {
 
     const strStart = input.indexOf('\'') + 1;
     const strEnd = input.indexOf('\'', strStart);
-    let logStr = input.substring(strStart, strEnd).split('{').join('${');
+    const logStr = input.substring(strStart, strEnd).split('{').join('${');
     return `console.log(\`${logStr}\`);`;
   }
 
   // Function declaration start
-  if (tokens[0] === 'task') {
+  if (t0 === 'task') {
     if (tokens.length > 2 && !tokens.includes('gets')) {
       throw new Error('task statement should specify arguments after task name using \'gets\'');
     }
 
-    const functionArgs = tokens.slice(3);
-    return `function ${tokens[1]} (${functionArgs.join(', ')}) {`;
+    return `function ${t1} (${tokens.slice(3).join(', ')}) {`;
   }
 
   // Function declaration end
-  if (tokens[0] === 'end') {
+  if (t0 === 'end') {
     return '}';
   }
 
   // Return statement
-  if (tokens[0] === 'return') {
+  if (t0 === 'return') {
     // Return function invocation
-    if (tokens[1] === 'run') {
-      const functionArgs = tokens.slice(4);
-      return `return ${tokens[2]}(${functionArgs.join(', ')});`;
+    if (t1 === 'run') {
+      return `return ${t2}(${tokens.slice(4).join(', ')});`;
     }
 
     // Simple expression
-    const expression = tokens.slice(1).join(' ');
-    return `return ${expression};`;
+    return `return ${tokens.slice(1).join(' ')};`;
   }
 
   // Object declaration
-  if (tokens[0] === 'object') {
-    return `let ${tokens[1]} = {};`;
+  if (t0 === 'object') {
+    return `let ${t1} = {};`;
   }
 
   // Object properties
-  if (tokens[1] === 'property') {
-    if (tokens[3] !== 'is') {
+  if (t1 === 'property') {
+    if (t3 !== 'is') {
       throw new Error('Object property must declare an initial value using \'is\'');
     }
 
-    return `${tokens[0]}['${tokens[2]}'] = ${tokens[4]};`;
+    return `${t0}['${t2}'] = ${t4};`;
   }
 
   throw new Error(`Invalid statement: ${input}`);
