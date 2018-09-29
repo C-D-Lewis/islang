@@ -12,17 +12,6 @@ const transformTest = (input, output = '') => {
 };
 
 describe('compile', () => {
-  describe('misc', () => {
-    it('should transform an empty line', () => {
-      transformTest('', '');
-    });
-
-    it('should transform a comment', () => {
-      const input = '// This is a comment';
-      transformTest(input, input);
-    });
-  });
-
   describe('logs', () => {
     it('should transform a log statement', () => {
       const input = 'log \'Hello, world!\'';
@@ -59,9 +48,21 @@ describe('compile', () => {
       const output = 'counter = 100;';
       transformTest(input, output);
     });
+
+    it('should transform a variable expression declaration', () => {
+      const input = 'value result is 10 + 12';
+      const output = 'let result = 10 + 12;';
+      transformTest(input, output);
+    });
+
+    it('should transform a variable expression assignment', () => {
+      const input = 'value result is \'ten\' + \'four\'';
+      const output = 'let result = \'ten\' + \'four\';';
+      transformTest(input, output);
+    });
   });
 
-  describe('loops', () => {
+  describe('control', () => {
     it('should transform an until loop', () => {
       const input = 'until counter equals maximum';
       const output = 'while (counter !== maximum) {';
@@ -70,6 +71,17 @@ describe('compile', () => {
 
     it('should throw if an until loop omits a limit', () => {
       const input = 'until counter';
+      expect(() => transformTest(input)).to.throw();
+    });
+
+    it('should transform if statement', () => {
+      const input = 'when some_value <= 10'
+      const output = 'if (some_value <= 10) {';
+      transformTest(input, output); 
+    });
+
+    it('should throw for a when statement with incorrect condition', () => {
+      const input = 'when some_value 100';
       expect(() => transformTest(input)).to.throw();
     });
   });
@@ -116,6 +128,12 @@ describe('compile', () => {
       transformTest(input, output);
     });
 
+    it('should transform multiple task arguments', () => {
+      const input = 'run increment with counter1 counter2';
+      const output = 'increment(counter1, counter2);';
+      transformTest(input, output);
+    });
+
     it('should throw if function arguments are specified incorrectly', () => {
       const input = 'run increment counter';
       expect(() => transformTest(input)).to.throw();
@@ -135,6 +153,23 @@ describe('compile', () => {
     it('should throw if task arguments are specified without \'with\'', () => {
       const input = 'run increment counter';
       expect(() => transformTest(input)).to.throw();
+    });
+
+    it('should transform returning a function invocation', () => {
+      const input = 'return run increment with counter';
+      const output = 'return increment(counter);';
+      transformTest(input, output);
+    });
+  });
+
+  describe('misc', () => {
+    it('should transform an empty line', () => {
+      transformTest('', '');
+    });
+
+    it('should transform a comment', () => {
+      const input = '// This is a comment';
+      transformTest(input, input);
     });
 
     it('should throw for any other kind of input', () => {

@@ -5,6 +5,11 @@ The aim is to create a language for scripting that does not require any
 significantly complex symbols or constructs, so that it can be used by more 
 novice programmers to achieve simple tasks.
 
+* [Usage](#usage)
+* [Run Tests](#run-tests)
+* [Language Manual](#language-manual)
+* [Examples](#examples)
+
 
 ## Usage
 
@@ -27,7 +32,7 @@ For example, the example test file `example.is`:
 `$ npm test`
 
 
-## Language Basics
+## Language Manual
 
 The `is` language follows a similar structure to most other statement-based
 languages. The basic concepts are demonstrated below. 
@@ -116,6 +121,33 @@ until counter equals maximum
   log '{counter}'
 end
 ``` 
+
+
+## Examples
+
+### Fibonacci Sequence
+
+```
+task fibonacci gets input
+  when input <= 1
+    return input
+  end
+
+  // return fib(n-1) + fib(n-2); 
+  value n_minus_1 is input - 1
+  value n_minus_2 is input - 2
+  value result_1 is run fibonacci with n_minus_1
+  value result_2 is run fibonacci with n_minus_2
+  return result_1 + result_2
+end
+
+value result is run fibonacci with 9
+log 'result: {result}'
+```
+
+```
+result: 34
+```
 
 
 ## TODO List

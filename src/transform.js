@@ -21,8 +21,15 @@ const transform = (input, tokens) => {
       throw new Error('value statement should include \'is\' to initialise it with a value');
     }
 
-    const varValue = tokens[3];
-    return `let ${tokens[1]} = ${varValue};`;
+    // Store function return value
+    if (tokens.includes('run')) {
+      const functionArgs = tokens.slice(6);
+      return `let ${tokens[1]} = ${tokens[4]}(${functionArgs.join(', ')});`
+    }
+
+    // Use simple expression
+    const expression = tokens.slice(3).join(' ');
+    return `let ${tokens[1]} = ${expression};`;
   }
 
   // Variable assignment
@@ -34,11 +41,21 @@ const transform = (input, tokens) => {
       }
 
       const functionArgs = tokens.slice(5);
-      return `${tokens[0]} = ${tokens[3]}(${functionArgs.join(',')});`
+      return `${tokens[0]} = ${tokens[3]}(${functionArgs.join(', ')});`
     }
 
-    const varValue = tokens.slice(2).join(' ');
-    return `${tokens[0]} = ${varValue};`;
+    // Use simple expression (e.g: result + 1)
+    const expression = tokens.slice(2).join(' ');
+    return `${tokens[0]} = ${expression};`;
+  }
+
+  // If statement
+  if (tokens[0] === 'when') {
+    if (tokens.length < 4) {
+      throw new Error('when statement must specify condition');
+    }
+
+    return `if (${tokens[1]} ${tokens[2]} ${tokens[3]}) {`;
   }
 
   // Until loop
@@ -57,7 +74,7 @@ const transform = (input, tokens) => {
     }
 
     const functionArgs = tokens.slice(3);
-    return `${tokens[1]}(${functionArgs.join(',')});`;
+    return `${tokens[1]}(${functionArgs.join(', ')});`;
   }
 
   // Log statement
@@ -80,7 +97,7 @@ const transform = (input, tokens) => {
     }
 
     const functionArgs = tokens.slice(3);
-    return `function ${tokens[1]} (${functionArgs.join(',')}) {`;
+    return `function ${tokens[1]} (${functionArgs.join(', ')}) {`;
   }
 
   // Function declaration end
@@ -90,7 +107,15 @@ const transform = (input, tokens) => {
 
   // Return statement
   if (tokens[0] === 'return') {
-    return `return ${tokens.slice(1).join(' ')};`;
+    // Return function invocation
+    if (tokens[1] === 'run') {
+      const functionArgs = tokens.slice(4);
+      return `return ${tokens[2]}(${functionArgs.join(', ')});`;
+    }
+
+    // Simple expression
+    const expression = tokens.slice(1).join(' ');
+    return `return ${expression};`;
   }
 
   throw new Error(`Invalid statement: ${input}`);
