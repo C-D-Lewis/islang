@@ -4,11 +4,26 @@
   "description": "Compile .is to .js",
   "scripts": {
     "compile": "node src/index.js",
-    "test": "./node_modules/.bin/mocha tests/index.js"
+    "mocha": "./node_modules/.bin/mocha tests/index.js",
+    "test": "./node_modules/.bin/nyc npm run mocha && npm run testClean",
+    "testClean": "rm -rf .nyc_output"
   },
   "author": "Chris Lewis",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1"
+  },
+  "nyc": {
+    "exclude": [
+      "tests/*"
+    ],
+    "reporter": [
+      "cobertura",
+      "html",
+      "lcov",
+      "text-summary"
+    ],
+    "report-dir": "./reports"
   }
 }
