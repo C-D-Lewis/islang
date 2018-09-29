@@ -118,6 +118,20 @@ const transform = (input, tokens) => {
     return `return ${expression};`;
   }
 
+  // Object declaration
+  if (tokens[0] === 'object') {
+    return `let ${tokens[1]} = {};`;
+  }
+
+  // Object properties
+  if (tokens[1] === 'property') {
+    if (tokens[3] !== 'is') {
+      throw new Error('Object property must declare an initial value using \'is\'');
+    }
+
+    return `${tokens[0]}['${tokens[2]}'] = ${tokens[4]};`;
+  }
+
   throw new Error(`Invalid statement: ${input}`);
 };
 

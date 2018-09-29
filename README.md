@@ -139,6 +139,27 @@ end
 ``` 
 
 
+### Objects
+
+Objects can contain more than one value, and so are declared differently to 
+plain values with the `object` keyword, then followed up with `property` 
+statements to add properties.
+
+```
+object car
+car property num_wheels is 4
+car property color is 'red'
+```
+
+Object values are accesses simply using the `.` operator.
+
+```
+log 'Car has {car.wheels} wheels'
+
+value car_color is car.color
+```
+
+
 ## Examples
 
 ### Fibonacci Sequence
@@ -165,10 +186,13 @@ log 'result: {result}'
 result: 34
 ```
 
+See the `examples` directory for more example scripts.
+
 
 ## TODO List
 
 * Utilities (random numbers, read/write files, HTTP, etc.)
-* Handle return values
 * Evaluate function calls inline
+* Remove requirement for quotes in strings (rest of line)
+* Replace string template with typeof check
 * Objects?

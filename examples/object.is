@@ -1,0 +1,17 @@
+task create_car
+  object car
+  car property color is 'red'
+  car property num_wheels is 4
+  car property driver is 'Chris'
+  return car
+end
+
+task main
+  value my_car is run create_car
+  log 'My car has {my_car.num_wheels} wheels'
+
+  value my_car_color is my_car.color
+  log 'My car color is {my_car_color}'
+end
+
+run main

@@ -168,6 +168,39 @@ describe('compile', () => {
     });
   });
 
+  describe('objects', () => {
+    it('should transform an object declaration', () => {
+      const input = 'object car';
+      const output = 'let car = {};';
+      transformTest(input, output);
+    });
+
+    it('should transform object property assignment', () => {
+      const input = 'car property wheels is 4';
+      const output = 'car[\'wheels\'] = 4;';
+      transformTest(input, output);
+    });
+
+    it('should throw if object property assignment is incorrect', () => {
+      const input = 'car property wheels 4';
+      expect(() => transformTest(input)).to.throw();
+    });
+
+    it('should transform object property access', () => {
+      let input = 'log \'Car has {car.wheels} wheels\'';
+      let output = 'console.log(`Car has ${car.wheels} wheels`);';
+      transformTest(input, output);
+
+      input = 'value wheels is car.wheels';
+      output = 'let wheels = car.wheels;';
+      transformTest(input, output);
+
+      input = 'wheels is car.wheels';
+      output = 'wheels = car.wheels;';
+      transformTest(input, output);
+    });
+  });
+
   describe('misc', () => {
     it('should transform an empty line', () => {
       transformTest('', '');
