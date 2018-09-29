@@ -1,0 +1,24 @@
+value counter is 0
+value maximum is 10
+
+task increment gets input
+  return input + 1
+end
+
+task test_counting
+  log 'Counting from {counter} to {maximum}...'
+
+  until counter equals maximum
+    counter is run increment with counter
+    
+    log '{counter}'
+  end
+  
+  log 'Counting complete!'
+end
+
+task main
+  run test_counting
+end
+
+run main

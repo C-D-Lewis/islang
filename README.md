@@ -55,13 +55,16 @@ Variables are declared using the `value` keyword, and an initial value.
 
 ```
 value my_value is 0
+
+value my_value is 25 + 100
 ```
 
 Variables are reassigned using the `is` keyword.
 
 ```
-// Set to 10
 my_value is 10
+
+my_value is 'hello' + 'world'
 ```
 
 
@@ -92,17 +95,30 @@ end
 Functions are called using the `run` keyword, specifying arguments after `with`.
 
 ```
-value counter = 1
+task greet gets name
+  log 'Hello there, {name}!'
+end
 
-run increment with counter
+value name is 'Chris'
+run greet with name
 ```
 
-You can use the return value of a function by combining `is` with `run`:
+You can use the return value of a function by combining `is` with `run` (and optionally `with`):
 
 ```
-value counter = 0
+value result is run fibonacci with 9
+```
 
-counter is run increment with counter
+
+### If
+
+An 'if' style statement can be used with `when` and any standard operators. As 
+with functions, the `end` keyword tells `is` when the 'if' is finished.
+
+```
+when temperature > 28
+  log 'Too hot!'
+end
 ```
 
 
