@@ -139,6 +139,12 @@ describe('compile', () => {
       expect(() => transformTest(input)).to.throw();
     });
 
+    it('should transform declaring variable with a task result', () => {
+      const input = 'value result is run init with some_value';
+      const output = 'let result = init(some_value);';
+      transformTest(input, output);
+    });
+
     it('should transform assigning the result of a task invocation', () => {
       const input = 'counter is run increment with counter';
       const output = 'counter = increment(counter);';
