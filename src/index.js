@@ -21,7 +21,7 @@ const getIndentLevel = (line) => {
 };
 
 const createJsFile = (lines) => {
-  let output = '// compiled from islang source\n// https://github.com/C-D-Lewis/islang\n';
+  let output = '// compiled from islang source\n// https://github.com/C-D-Lewis/islang\n\n';
 
   lines.forEach((line) => {
     const indentLevel = getIndentLevel(line);

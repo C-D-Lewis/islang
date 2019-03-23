@@ -1,13 +1,9 @@
 using fetch
 
-task getTimestamp
-  value result is from fetch with 'http://time.evrythng.com/time'
-  return result
-end
-
 task main
-  value time is from getTimestamp
-  log 'The time is {time}'
+  value text is from fetch with 'http://time.evrythng.com/time'
+  object data is text
+  log 'The time is {data.timestamp}'
 end
 
 run main

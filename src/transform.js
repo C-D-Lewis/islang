@@ -117,6 +117,11 @@ const transform = (input, tokens) => {
 
   // Object declaration
   if (t0 === 'object') {
+    // Convert object from string object
+    if (t3) {
+      return `let ${t1} = JSON.parse(${t3});`;
+    }
+
     return `let ${t1} = {};`;
   }
 
