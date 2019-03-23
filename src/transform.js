@@ -1,5 +1,8 @@
+const { ImportText } = require('./util');
+
 /**
- * Transform a line of is into a line of JS
+ * Transform a line of is into a line of JS.
+ *
  * @param {String} input - The entire input line.
  * @param {String[]} tokens - The tokens of the line split on ' '.
  * @returns {String} The line of JS.
@@ -24,8 +27,8 @@ const transform = (input, tokens) => {
     }
 
     // Store function return value
-    if (tokens.includes('run')) {
-      return `let ${t1} = ${t4}(${tokens.slice(6).join(', ')});`
+    if (tokens.includes('from')) {
+      return `let ${t1} = await ${t4}(${tokens.slice(6).join(', ')});`
     }
 
     // Use simple expression
@@ -36,8 +39,8 @@ const transform = (input, tokens) => {
   if (t1 === 'is') {
     // Store function return value
     if (tokens.length > 3) {
-      if (t2 !== 'run') {
-        throw new Error('Assign return value of a task using \'is run\'');
+      if (t2 !== 'from') {
+        throw new Error('Assign return value of a task using \'is from\'');
       }
 
       return `${t0} = ${t3}(${tokens.slice(5).join(', ')});`
@@ -93,7 +96,7 @@ const transform = (input, tokens) => {
       throw new Error('task statement should specify arguments after task name using \'gets\'');
     }
 
-    return `function ${t1} (${tokens.slice(3).join(', ')}) {`;
+    return `async function ${t1} (${tokens.slice(3).join(', ')}) {`;
   }
 
   // Function declaration end
@@ -124,6 +127,19 @@ const transform = (input, tokens) => {
     }
 
     return `${t0}['${t2}'] = ${t4};`;
+  }
+
+  // Import some node libraries
+  if (t0 === 'using') {
+    const map = {
+      fetch: ImportText.fetch,
+    };
+
+    if (!map[t1]) {
+      throw new Error(`'using' specified an unavailable library. Choose from: ${Object.keys(map).join(', ')}.`);
+    }
+
+    return map[t1];
   }
 
   throw new Error(`Invalid statement: ${input}`);

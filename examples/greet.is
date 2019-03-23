@@ -2,5 +2,9 @@ task greet gets name
   log 'Hello there, {name}!'
 end
 
-value name is 'Chris'
-run greet with name
+task main
+  value name is 'Chris'
+  run greet with name
+end
+
+run main

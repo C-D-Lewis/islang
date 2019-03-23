@@ -7,7 +7,7 @@ task create_car
 end
 
 task main
-  value my_car is run create_car
+  value my_car is from create_car
   log 'My car has {my_car.num_wheels} wheels'
 
   value my_car_color is my_car.color

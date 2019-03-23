@@ -9,11 +9,11 @@ task test_counting
   log 'Counting from {counter} to {maximum}...'
 
   until counter equals maximum
-    counter is run increment with counter
-    
+    counter is from increment with counter
+
     log '{counter}'
   end
-  
+
   log 'Counting complete!'
 end
 

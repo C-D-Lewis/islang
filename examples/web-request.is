@@ -1,0 +1,13 @@
+using fetch
+
+task getTimestamp
+  value result is from fetch with 'http://time.evrythng.com/time'
+  return result
+end
+
+task main
+  value time is from getTimestamp
+  log 'The time is {time}'
+end
+
+run main

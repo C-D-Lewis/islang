@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 
+const { ImportText } = require('../src/util');
 const transform = require('../src/transform');
 
 /**
@@ -89,13 +90,13 @@ describe('compile', () => {
   describe('tasks', () => {
     it('should transform a task declaration', () => {
       const input = 'task my_task';
-      const output = 'function my_task () {';
+      const output = 'async function my_task () {';
       transformTest(input, output);
     });
 
     it('should transform a task declaration with arguments', () => {
       const input = 'task my_task gets some_value';
-      const output = 'function my_task (some_value) {';
+      const output = 'async function my_task (some_value) {';
       transformTest(input, output);
     });
 
@@ -140,13 +141,13 @@ describe('compile', () => {
     });
 
     it('should transform declaring variable with a task result', () => {
-      const input = 'value result is run init with some_value';
-      const output = 'let result = init(some_value);';
+      const input = 'value result is from init with some_value';
+      const output = 'let result = await init(some_value);';
       transformTest(input, output);
     });
 
     it('should transform assigning the result of a task invocation', () => {
-      const input = 'counter is run increment with counter';
+      const input = 'counter is from increment with counter';
       const output = 'counter = increment(counter);';
       transformTest(input, output);
     });
@@ -201,6 +202,19 @@ describe('compile', () => {
     });
   });
 
+  describe('imports', () => {
+    it('should transform a known import', () => {
+      const input = 'using fetch';
+      const output = ImportText.fetch;
+      transformTest(input, output);
+    });
+
+    it('should throw for an unknown import', () => {
+      const input = 'using foo';
+      expect(() => transformTest(input)).to.throw;
+    });
+  });
+
   describe('misc', () => {
     it('should transform an empty line', () => {
       transformTest('', '');
@@ -211,7 +225,7 @@ describe('compile', () => {
       transformTest(input, input);
     });
 
-    it('should throw for any other kind of input', () => {
+    it('should throw for any unrecognised syntax', () => {
       const input = 'the meaning of life';
       expect(() => transformTest(input)).to.throw();
     });

@@ -6,13 +6,13 @@ task fibonacci gets input
   // return fib(n-1) + fib(n-2); 
   value n_minus_1 is input - 1
   value n_minus_2 is input - 2
-  value result_1 is run fibonacci with n_minus_1
-  value result_2 is run fibonacci with n_minus_2
+  value result_1 is from fibonacci with n_minus_1
+  value result_2 is from fibonacci with n_minus_2
   return result_1 + result_2
 end
 
 task main
-  value fib_output is run fibonacci with 9
+  value fib_output is from fibonacci with 9
   log 'fib_output: {fib_output}'
 end
 
